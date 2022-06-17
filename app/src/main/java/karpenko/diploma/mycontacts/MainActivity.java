@@ -1,5 +1,6 @@
 package karpenko.diploma.mycontacts;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ import karpenko.diploma.mycontacts.databinding.ActivityMainBinding;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.contentcapture.ContentCaptureCondition;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Contact> contactsArrayList = new ArrayList<>();
     private ContactAdapter contactAdapter;
 
+    private MainActivityButtonHandler mainActivityButtonHandler;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +56,10 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(binding.toolbar);
 
-        RecyclerView recyclerView = findViewById(R.id.contactsRecyclerView);
+        mainActivityButtonHandler = new MainActivityButtonHandler(this);
+        binding.setButtonHandler(mainActivityButtonHandler);
+
+        RecyclerView recyclerView = binding.layoutContentMain.contactsRecyclerView;
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
@@ -266,6 +273,19 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(Void unused) {
             super.onPostExecute(unused);
             loadContacts();
+        }
+    }
+
+    public class MainActivityButtonHandler{
+
+        Context context;
+
+        public MainActivityButtonHandler(Context context) {
+            this.context = context;
+        }
+
+        public void onButtonClick(View view){
+            addAndEditContact(false,null, -1);
         }
     }
 
